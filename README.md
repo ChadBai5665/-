@@ -32,11 +32,8 @@
 * 📦 **版本号**：V 5.2 版本
 * 👤 **创作者**：ChadBai
 * 📢 **公众号**：小少的AI链路笔记
-* 欢迎关注公众号，一起玩AI
+* 
 * 联系邮箱：baixueliang-100@163.com；baichad3@gmail.com
 * 加V:Chad_Bai
 
-欢迎关注以下二维码，获取更多项目更新及 AI 学习笔记：
-
-![公众号二维码]({{file\:file-LcBHocMg9KEzJvZxjSk1e9}})
-
+欢迎关注公众号，一起玩AI
