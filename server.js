@@ -621,3 +621,4 @@ function broadcastState(game) {
     }
   }
 }
+module.exports = server;
