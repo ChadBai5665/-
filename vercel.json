@@ -1,18 +1,14 @@
 {
-  "version": 2,
-  "functions": {
-    "server.js": {
-      "runtime": "nodejs18.x",
-      "maxDuration": 60
-    }
-  },
   "builds": [
-    { "src": "server.js", "use": "@vercel/node" },
-    { "src": "index.html", "use": "@vercel/static" }
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
   ],
-  "routes": [
-    { "src": "/socket.io/(.*)", "dest": "/server.js" },
-    { "src": "/api/(.*)", "dest": "/server.js" },
-    { "src": "/(.*)", "dest": "/index.html" }
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/server.js"
+    }
   ]
 }
