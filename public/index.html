@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>技能五子棋 Online</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        :root {
+            --primary: #1d4ed8;
+            --primary-light: #3b82f6;
+            --danger: #dc2626;
+            --bg: #f3f4f6;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            margin: 0;
+            background: var(--bg);
+            color: #111827;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        #app {
+            width: 100%;
+            max-width: 960px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+            padding: 24px;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 0;
+            color: #111827;
+        }
+        h2 {
+            color: #1f2937;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 16px;
+            border: 1px solid #cbd5f5;
+            border-radius: 8px;
+        }
+        button {
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #e5e7eb;
+            color: #111827;
+        }
+        button.primary {
+            background: var(--primary);
+            color: #fff;
+        }
+        button.primary:hover {
+            background: var(--primary-light);
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        #board {
+            display: grid;
+            grid-gap: 0;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fefce8;
+            margin: 20px auto;
+        }
+        .cell {
+            width: 32px;
+            height: 32px;
+            border: 1px solid rgba(107, 114, 128, 0.35);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .cell.cold-palace {
+            background: #fee2e2;
+        }
+        .cell.disabled {
+            cursor: default;
+            background: rgba(229, 231, 235, 0.6);
+        }
+        #skills {
+            margin: 20px auto 0;
+            max-width: 840px;
+        }
+        .skills-group {
+            margin-bottom: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            background: #f9fafb;
+        }
+        .skills-group strong {
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        .skills-group button {
+            margin: 4px;
+            background: #e5e7eb;
+        }
+        .skills-group button.active {
+            background: var(--primary);
+            color: #fff;
+        }
+        .skills-group button.used {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+        .icon {
+            margin-right: 4px;
+        }
+        #status, #matchStatus, #loginError {
+            min-height: 24px;
+            color: #374151;
+        }
+        #loginError {
+            color: var(--danger);
+        }
+        #matchPanel {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        #playersInfo {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .player-card {
+            flex: 1;
+            min-width: 200px;
+            background: #f9fafb;
+            border-radius: 10px;
+            padding: 12px 16px;
+            box-shadow: inset 0 0 0 1px #e5e7eb;
+        }
+        .player-card.current {
+            border-color: var(--primary);
+            box-shadow: inset 0 0 0 2px var(--primary);
+        }
+        #skillDescriptions {
+            max-width: 840px;
+            margin: 20px auto 0;
+            text-align: left;
+        }
+        #skillDescriptions p {
+            margin: 4px 0;
+            line-height: 1.5;
+        }
+        #footer {
+            margin-top: 24px;
+            font-size: 13px;
+            color: #6b7280;
+            text-align: center;
+        }
+        #footer img {
+            margin-top: 10px;
+            width: 150px;
+            height: auto;
+        }
+        @media (max-width: 600px) {
+            .cell {
+                width: 26px;
+                height: 26px;
+                font-size: 18px;
+            }
+            button {
+                width: 100%;
+            }
+            .skills-group button {
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>技能五子棋 Online</h1>
+        <section id="loginSection" class="section active">
+            <h2>登录</h2>
+            <div class="form-group">
+                <label for="username">请输入昵称</label>
+                <input id="username" type="text" maxlength="16" placeholder="例如：最强围棋手">
+            </div>
+            <button id="loginButton" class="primary">登录</button>
+            <p id="loginError"></p>
+        </section>
+        <section id="lobbySection" class="section">
+            <h2>大厅</h2>
+            <div id="matchPanel">
+                <p>欢迎，<strong id="currentUser"></strong></p>
+                <button id="matchButton" class="primary">开始匹配</button>
+                <p id="matchStatus"></p>
+            </div>
+        </section>
+        <section id="gameSection" class="section">
+            <div id="playersInfo">
+                <div id="blackPlayer" class="player-card">
+                    <div><strong>黑手：</strong><span class="name"></span></div>
+                    <div>棋子：●</div>
+                </div>
+                <div id="whitePlayer" class="player-card">
+                    <div><strong>白手：</strong><span class="name"></span></div>
+                    <div>棋子：○</div>
+                </div>
+            </div>
+            <p id="status"></p>
+            <div id="board"></div>
+            <div id="skills">
+                <div class="skills-group" id="黑手Skills">
+                    <strong>黑手技能：</strong>
+                    <button data-skill="飞沙走石" data-player="1"><span class="icon">💨</span>飞沙走石</button>
+                    <button data-skill="力拔山兮" data-player="1"><span class="icon">🏔️</span>力拔山兮</button>
+                    <button data-skill="静如止水" data-player="1"><span class="icon">❄️</span>静如止水</button>
+                    <button data-skill="调呈离山" data-player="1"><span class="icon">↪️</span>调呈离山</button>
+                    <button data-skill="时光倒流" data-player="1"><span class="icon">⏪</span>时光倒流</button>
+                    <button data-skill="拾金不昧" data-player="1"><span class="icon">🔄</span>拾金不昧</button>
+                </div>
+                <div class="skills-group" id="白手Skills">
+                    <strong>白手技能：</strong>
+                    <button data-skill="飞沙走石" data-player="2"><span class="icon">💨</span>飞沙走石</button>
+                    <button data-skill="力拔山兮" data-player="2"><span class="icon">🏔️</span>力拔山兮</button>
+                    <button data-skill="静如止水" data-player="2"><span class="icon">❄️</span>静如止水</button>
+                    <button data-skill="调呈离山" data-player="2"><span class="icon">↪️</span>调呈离山</button>
+                    <button data-skill="时光倒流" data-player="2"><span class="icon">⏪</span>时光倒流</button>
+                    <button data-skill="拾金不昧" data-player="2"><span class="icon">🔄</span>拾金不昧</button>
+                </div>
+                <button id="restart" class="primary">重新开始</button>
+            </div>
+            <h3>技能描述</h3>
+            <div id="skillDescriptions">
+                <p><strong>飞沙走石：</strong>移除对手任意一枚棋子，并封锁该落点使其下一回合无法落子。</p>
+                <p><strong>力拔山兮：</strong>掀翻棋盘，棋盘上当前的棋子随机掉落一半。</p>
+                <p><strong>静如止水：</strong>冻结时间，使对手失去一回合落子机会。</p>
+                <p><strong>调呈离山：</strong>强制将对手棋子移动到棋盘边缘的冷宫区，该棋子无法参与连珠。</p>
+                <p><strong>时光倒流：</strong>将棋局重置回 3 步之前的状态，双方棋子位置恢复。</p>
+                <p><strong>拾金不昧：</strong>随机与对手交换一枚棋子，包括已连成线的棋子。</p>
+            </div>
+            <div id="footer">
+                <p>版本：Online 1.0</p>
+                <p>创作者：ChadBai</p>
+                <p>改造：多用户在线对战 Demo</p>
+                <img src="qrcode.png" alt="公众号二维码">
+            </div>
+        </section>
+    </div>
+    <script src="client.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "game-wuziqi-online",
+  "version": "1.0.0",
+  "description": "在线技能五子棋，支持 WebSocket 对战与用户登录",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "ws": "^8.16.0"
+  }
+}
