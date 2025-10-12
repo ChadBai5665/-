@@ -1,0 +1,21 @@
+{
+  "name": "game-wuziqi",
+  "version": "2.0.0",
+  "description": "支持用户登录与在线匹配的技能五子棋多人游戏。",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "gomoku",
+    "multiplayer",
+    "socket.io"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.5"
+  }
+}
